@@ -1,16 +1,27 @@
 UIParent = {}
-	-- children = {},
+
+setmetatable(UIParent, {__index = _G})
+setfenv(1, UIParent)
+
+children = {}
+
+left = 0
+right = love.graphics.getWidth()
+top = 0
+bottom = love.graphics.getHeight()
+
+width = right
+height = bottom
+
+visible = true
+
+function update(self, dt)
+	print(self.right)
+end
 	-- fonts = {},
 
-	-- left = 0,
-	-- top = 0,
-	-- right = WINDOW_WIDTH,
-	-- bottom = WINDOW_HEIGHT,
 
-	-- width = WINDOW_WIDTH,
-	-- height = WINDOW_HEIGHT,
 
-	-- visible = true,
 
 	-- isVisible = function(self)
 	-- 	return self.visible
