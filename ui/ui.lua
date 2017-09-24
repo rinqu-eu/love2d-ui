@@ -73,14 +73,13 @@ function isVisible(self)
 	return true
 end
 
+UIParent.fonts = {}
+UIParent.fonts["default"] = love.graphics.getFont()
+UIParent.fonts["fira_code"] = love.graphics.newFont("ui/assets/FiraCode.ttf", 14)
+
 do
 	require("ui.widgets.frame")
 end
-
-
--- UIParent.fonts["default"] = love.graphics.getFont()
--- UIParent.fonts["fira_code"] = love.graphics.newFont("assets/FiraCode.ttf", 14)
-
 -- UIParent.container = {}
 -- UIParent.container.textures = {}
 

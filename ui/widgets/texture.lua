@@ -80,7 +80,7 @@ local cmethods = {
 				end
 			end
 		end
-	end,
+	end
 }
 
 local methods = {

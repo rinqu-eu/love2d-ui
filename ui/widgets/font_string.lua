@@ -69,8 +69,8 @@ local _setPointHandler = function(self)
 	end
 end
 
-local methods = {
-	["__draw"] = function(self)
+local cmethods = {
+	__draw__ = function(self)
 		if (self.visible == true) then
 			love.graphics.setFont(self.font_file)
 
@@ -78,23 +78,25 @@ local methods = {
 				local hex = "#" .. self.text:sub(5, 10)
 				local text = self.text:sub(11)
 
-				love.graphics.setColor(unpack(ToRGB(hex)))
+				love.graphics.setColor(ToRGB(hex))
 				love.graphics.print(text, self.left, self.top, 0, self.scale_x, self.scale_z)
-				love.graphics.setColor(255, 255, 255, 255)
 			else
+				love.graphics.setColor(255, 255, 255, 255)
 				love.graphics.print(self.text, self.left, self.top, 0, self.scale_x, self.scale_z)
 
 			end
 
 			love.graphics.setFont(DEFAULT_FONT_FILE)
 		end
-	end,
+	end
+}
 
-	["__update"] = function(self)
+local methods = {
+	updateSelf = function(self)
 		_setPointHandler(self)
 	end,
 
-	["setAllPoints"] = function(self, relative_to)
+	setAllPoints = function(self, relative_to)
 		self.point = "ALL"
 		self.relative_to = relative_to
 		self.relative_point = "ALL"
@@ -104,10 +106,10 @@ local methods = {
 		self.width = relative_to.width
 		self.height = relative_to.height
 
-		self:__update()
+		self:updateSelf()
 	end,
 
-	["setFont"] = function(self, font_file, font_size)
+	setFont = function(self, font_file, font_size)
 		if (UIParent.fonts[font_file] == nil) then
 			self.font_file = UIParent.fonts["default"]
 		else
@@ -119,42 +121,38 @@ local methods = {
 		self.width = _getTextWidth(self.font_file, self.font_size, self.text)
 		self.height = font_size
 
-		self:__update()
+		self:updateSelf()
 	end,
 
-	["setPoint"] = function(self, point, relative_to, relative_point, offset_x, offset_z)
+	setPoint = function(self, point, relative_to, relative_point, offset_x, offset_z)
 		self.point = point
 		self.relative_to = relative_to
 		self.relative_point = relative_point
 		self.offset_x = offset_x
 		self.offset_z = offset_z
 
-		self:__update()
+		self:updateSelf()
 	end,
 
-	["setText"] = function(self, text)
+	setText = function(self, text)
 		self.text = tostring(text)
 		self.width = _getTextWidth(self.font_file, self.font_size, text)
 
-		self:__update()
+		self:updateSelf()
 	end,
 
-	["show"] = function(self)
+	show = function(self)
 		self.visible = true
-
-		self:__update()
 	end,
 
-	["hide"] = function(self)
+	hide = function(self)
 		self.visible = false
-
-		self:__update()
 	end,
 }
 
 local font_string = {}
 
-font_string.CreateFontString = function(parent)
+function font_string.CreateFontString(parent)
 	local inst = {}
 
 	inst.parent = parent
@@ -174,6 +172,10 @@ font_string.CreateFontString = function(parent)
 	inst.text = ""
 
 	inst.visible = true
+
+	for method, func in pairs(cmethods) do
+		inst[method] = func
+	end
 
 	for method, func in pairs(methods) do
 		inst[method] = func

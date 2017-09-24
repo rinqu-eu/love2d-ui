@@ -1,5 +1,5 @@
 local _texture = require("ui.widgets.texture")
--- local _font_string = require("src.common.ui.widgets.font_string")
+local _font_string = require("ui.widgets.font_string")
 
 function _setPointHandler(self)
 	local relative_to = self.relative_to
@@ -72,6 +72,9 @@ local cmethods = {
 		if (self.is_visible == true) then
 			for _, texture in pairs(self.__textures__) do
 				texture:__draw__()
+			end
+			for _, font_string in pairs(self.__font_str__) do
+				font_string:__draw__()
 			end
 		end
 	end,
@@ -163,6 +166,14 @@ local methods = {
 		local inst = _texture.CreateTexture(self)
 
 		table.insert(self.__textures__, inst)
+
+		return inst
+	end,
+
+	createFontString = function(self)
+		local inst = _font_string.CreateFontString(self)
+
+		table.insert(self.__font_str__, inst)
 
 		return inst
 	end,
