@@ -210,10 +210,6 @@ local methods = {
 				if (self.parent ~= nil and self.parent:isVisible() == true) then
 					self.__scripts__[handler](self, ...)
 				end
-			elseif (handler:sub(1, 7) == "OnMouse") then
-				if (self:isVisible() == true and self.parent ~= nil and self.parent:isVisible() == true and self:isMouseOver() == true) then
-					self.__scripts__[handler](self, ...)
-				end
 			else
 				if (self:isVisible() == true and self.parent ~= nil and self.parent:isVisible() == true) then
 					self.__scripts__[handler](self, ...)
