@@ -1,7 +1,7 @@
-local _texture = require("src.common.ui.widgets.texture")
-local _font_string = require("src.common.ui.widgets.font_string")
+local _texture = require("ui.widgets.texture")
+-- local _font_string = require("src.common.ui.widgets.font_string")
 
-local _setPointHandler = function(self)
+function _setPointHandler(self)
 	local relative_to = self.relative_to
 	local point = self.point
 
@@ -63,135 +63,84 @@ local _setPointHandler = function(self)
 	end
 end
 
-local _shouldFireWM = function(self)
-	return self:isMouseOver() and self:isVisible() == true and self.parent ~= nil and self.parent:isVisible() == true
-end
+local cmethods = {
+	__update__ = function(self, dt)
+		self:runScript("OnUpdate", dt)
+	end,
 
-local _shouldFireWOM = function(self)
-	return self:isVisible() == true and self.parent ~= nil and self.parent:isVisible() == true
-end
+	__draw__ = function(self)
+		if (self.is_visible == true) then
+			for _, texture in pairs(self.__textures__) do
+				texture:__draw__()
+			end
+		end
+	end,
+
+	__keypressed__ = function(self, key)
+		self:runScript("OnKeyDown", key)
+	end,
+
+	__keyreleased__ = function(self, key)
+		self:runScript("OnKeyUp", key)
+	end,
+
+	__mousepressed__ = function(self, x, y, button)
+		self:runScript("OnMouseDown", x, y, button)
+	end,
+
+	__mousereleased__ = function(self, x, y, button)
+		self:runScript("OnMouseUp", x, y, button)
+	end,
+
+	__mousemoved__ = function(self, x, y, dx, dy)
+		if (self.is_mouse_over ~= self:isMouseOver()) then
+			self.is_mouse_over = self:isMouseOver()
+			if (self.is_mouse_over == true) then
+				self:runScript("OnEnter")
+			else
+				self:runScript("OnLeave")
+			end
+		end
+	end,
+
+	__wheelmoved__ = function(self, x, y)
+		self:runScript("OnMouseWheel", x, y)
+	end,
+}
+
+--[[
+scripts
+	OnUpdate
+	OnEnter
+	OnLeave
+	OnShow
+	OnHide
+	OnMouseDown w/mouse
+	OnMouseUp w/mouse
+	OnMouseWheel w/ mouse
+	OnKeyDown
+	OnKeyUp
+]]
 
 local methods = {
-	["registerEvent"] = function(self, event)
-		table.insert(hw_events[event].children, self)
-	end,
+	updateSelf = function(self)
+		_setPointHandler(self)
 
-	["setScript"] = function(self, handler, func)
-		self.scripts[handler] = func
-	end,
-
-	["event"] = function(self, event, ...)
-		if (self.scripts["OnEvent"] ~= nil and _shouldFireWOM(self) == true) then
-			self.scripts.OnEvent(self, event, ...)
+		for _, texture in pairs(self.__textures__) do
+			texture:updateSelf()
 		end
 	end,
 
-	["mousepressed"] = function(self, button, x, z)
-		if (self.scripts["OnMouseDown"] ~= nil and _shouldFireWM(self) == true) then
-			self.scripts.OnMouseDown(self, button, x, z)
-		end
-
-		if (self:getNumChildren() > 0) then
-			for _, child in pairs(self.children) do
-				child:mousepressed(button, x, z)
-			end
-		end
-	end,
-
-	["mousereleased"] = function(self, button, x, z)
-		if (self.scripts["OnMouseUp"] ~= nil and _shouldFireWM(self) == true) then
-			self.scripts.OnMouseUp(self, button, x, z)
-		end
-
-		if (self:getNumChildren() > 0) then
-			for _, child in pairs(self.children) do
-				child:mousereleased(self, button, x, z)
-			end
-		end
-	end,
-
-	["wheelmoved"] = function(self, dir)
-		if (self.scripts["OnMouseWheel"] ~= nil and _shouldFireWM(self) == true) then
-			self.scripts.OnMouseWheel(self, dir)
-		end
-
-		if (self:getNumChildren() > 0) then
-			for _, child in pairs(self.children) do
-				child:wheelmoved(self,dir)
-			end
-		end
-	end,
-
-	["keypressed"] = function(self, key)
-		if (self.scripts["OnKeyDown"] ~= nil and _shouldFireWOM(self) == true) then
-			self.scripts.OnKeyDown(self, key)
-		end
-
-		if (self:getNumChildren() > 0) then
-			for _, child in pairs(self.children) do
-				child:keypressed(key)
-			end
-		end
-	end,
-
-	["keyreleased"] = function(self, key)
-		if (self.scripts["OnKeyUp"] ~= nil and _shouldFireWOM(self) == true) then
-			self.scripts.OnKeyUp(self, key)
-		end
-
-		if (self:getNumChildren() > 0) then
-			for _, child in pairs(self.children) do
-				child:keyreleased(key)
-			end
-		end
-	end,
-
-	["isMouseOver"] = function(self)
-		local x, z = love.mouse.getPosition()
-		local horizontal = x >= self.left and x < self.right
-		local vertical = z >= self.top and z < self.bottom
-
-		return horizontal and vertical
-	end,
-
-	["isVisible"] = function(self)
-		return self.visible
-	end,
-
-	["createTexture"] = function(self)
-		local inst = _texture.CreateTexture(self)
-
-		table.insert(self.textures, inst)
-
-		return inst
-	end,
-
-	["createFontString"] = function(self)
-		local inst = _font_string.CreateFontString(self)
-
-		table.insert(self.font_strings, inst)
-
-		return inst
-	end,
-
-	["setSize"] = function(self, width, height)
-		self.width = width
-		self.height = height
-
-		self:__update()
-	end,
-
-	["setPoint"] = function(self, point, relative_to, relative_point, offset_x, offset_z)
+	setPoint = function(self, point, relative_to, relative_point, offset_x, offset_z)
 		self.point = point
 		self.relative_to = relative_to
 		self.relative_point = relative_point
 		self.offset_x = offset_x
 		self.offset_z = offset_z
-
-		self:__update()
+		self:updateSelf()
 	end,
 
-	["setAllPoints"] = function(self, relative_to)
+	setAllPoints = function(self, relative_to)
 		self.width = relative_to.width
 		self.height = relative_to.height
 
@@ -201,149 +150,89 @@ local methods = {
 		self.offset_x = 0
 		self.offset_y = 0
 
-		self:__update()
+		self:updateSelf()
 	end,
 
-	["clearAllPoints"] = function(self)
-		self.point = "NONE"
-		self.relative_to = self.parent
-		self.relative_point = "NONE"
-		self.offset_x = 0
-		self.offset_y = 0
-
-		self:__update()
+	setSize = function(self, width, height)
+		self.width = width
+		self.height = height
+		self:updateSelf()
 	end,
 
-	["show"] = function(self)
-		if (self.scripts["OnShow"] ~= nil) then
-			self.scripts.OnShow(self)
-		end
+	createTexture = function(self)
+		local inst = _texture.CreateTexture(self)
 
-		self.visible = true
+		table.insert(self.__textures__, inst)
 
-		self:__update()
+		return inst
 	end,
 
-	["hide"] = function(self)
-		if (self.scripts["OnHide"] ~= nil) then
-			self.scripts.OnHide(self)
-		end
+	isMouseOver = function(self)
+		local x, z = love.mouse.getPosition()
+		local h = x >= self.left and x < self.right
+		local v = z >= self.top and z < self.bottom
 
-		self.visible = false
-
-		self:__update()
+		return h and v
 	end,
 
-	["__update"] = function(self, dt)
-		if (self.scripts["OnUpdate"] ~= nil and _shouldFireWOM(self) == true) then
-			self.scripts.OnUpdate(self, dt)
-		end
-
-		if (self:isMouseOver() ~= self.is_mouse_over) then
-			self.is_mouse_over = self:isMouseOver()
-			if (self.is_mouse_over == true and self.scripts["OnEnter"] ~= nil and _shouldFireWOM(self) == true) then
-				self.scripts.OnEnter(self)
-			end
-			if (self.is_mouse_over == false and self.scripts["OnLeave"] ~= nil and _shouldFireWOM(self) == true) then
-				self.scripts.OnLeave(self)
-			end
-		end
-
-		_setPointHandler(self)
-
-		if (self:getNumTextures() > 0) then
-			for _, texture in pairs(self.textures) do
-				texture:__update()
-			end
-		end
-
-		if (self:getNumFontStrings() > 0) then
-			for _, font_string in pairs(self.font_strings) do
-				font_string:__update()
-			end
-		end
-
-		if (self:getNumChildren() > 0) then
-			for _, child in pairs(self.children) do
-				child:__update(dt)
-			end
-		end
+	isVisible = function(self)
+		return self.is_visible
 	end,
 
-	["getNumChildren"] = function(self)
-		local num_children = 0
-
-		for _, _ in pairs(self.children) do
-			num_children = num_children + 1
-		end
-
-		return num_children
+	hide = function(self)
+		self.is_visible = false
+		self:runScript("OnHide")
 	end,
 
-	["getNumTextures"] = function(self)
-		local num = 0
-
-		for _, _ in pairs(self.textures) do
-			num = num + 1
-		end
-
-		return num
+	show = function(self)
+		self.is_visible = true
+		self:runScript("OnShow")
 	end,
 
-	["getNumFontStrings"] = function(self)
-		local num = 0
-
-		for _, _ in pairs(self.font_strings) do
-			num = num + 1
-		end
-
-		return num
+	setScript = function(self, handler, func)
+		self.__scripts__[handler] = func
 	end,
 
-	["__draw"] = function(self)
-		if (self.visible == true) then
-			for _, texture in pairs(self.textures) do
-				texture:__draw()
-			end
-
-			for _, font_string in pairs(self.font_strings) do
-				font_string:__draw()
-			end
-
-			if (self:getNumChildren() > 0) then
-				for _, child in pairs(self.children) do
-					child:__draw()
+	runScript = function(self, handler, ...)
+		if (self.__scripts__[handler] ~= nil) then
+			if (handler == "OnHide") then
+				if (self.parent ~= nil and self.parent:isVisible() == true) then
+					self.__scripts__[handler](self, ...)
+				end
+			elseif (handler:sub(1, 7) == "OnMouse") then
+				if (self:isVisible() == true and self.parent ~= nil and self.parent:isVisible() == true and self:isMouseOver() == true) then
+					self.__scripts__[handler](self, ...)
+				end
+			else
+				if (self:isVisible() == true and self.parent ~= nil and self.parent:isVisible() == true) then
+					self.__scripts__[handler](self, ...)
 				end
 			end
 		end
-	end
+	end,
 }
 
-CreateFrame = function(parent, name)
+function CreateFrame(parent, name)
 	local inst = {}
 
-	inst.type = "frame"
-
-	table.insert(parent.children, inst)
-
-	inst.name = name or ""
-
-	inst.children = {}
-	inst.textures = {}
-	inst.font_strings = {}
-
-	inst.scripts = {}
-
 	inst.parent = parent
+	inst.name = name or ""
+	inst.type = "frame"
+	table.insert(parent.__children__, inst)
+	table.insert(ui.__frames__, inst)
 
-	inst.left = 0
-	inst.right = 0
-	inst.top = 0
-	inst.bottom = 0
+	inst.left = -1
+	inst.right = -1
+	inst.top = -1
+	inst.bottom = -1
 
-	inst.width = 0
-	inst.height = 0
-	inst.visible = true
+	inst.width = -1
+	inst.height = -1
+
+	inst.level = -1
+	inst.strata = -1
+
+	inst.is_visible = true
 	inst.is_mouse_over = false
 
 	inst.point = "NONE"
@@ -351,6 +240,15 @@ CreateFrame = function(parent, name)
 	inst.relative_point = "NONE"
 	inst.offset_x = 0
 	inst.offset_z = 0
+
+	inst.__children__ = {}
+	inst.__textures__ = {}
+	inst.__font_str__ = {}
+	inst.__scripts__ = {}
+
+	for method, func in pairs(cmethods) do
+		inst[method] = func
+	end
 
 	for method, func in pairs(methods) do
 		inst[method] = func
