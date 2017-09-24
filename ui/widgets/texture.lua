@@ -1,3 +1,5 @@
+local lg = love.graphics
+
 local _setPointHandler = function(self)
 	local relative_to = self.relative_to
 	local point = self.point
@@ -63,49 +65,51 @@ local _setPointHandler = function(self)
 	end
 end
 
-local methods = {
-	["__draw"] = function(self)
-		if (self.visible == true) then
-			if (self.mode == 1) then
+local cmethods = {
+	__draw__ = function(self)
+		if (self.is_visible == true) then
+			if (self.mode == "c") then
+				lg.setColor(self.color)
+				lg.rectangle("fill", self.left, self.top, self.width, self.height)
+			elseif (self.mode == "t") then
+				lg.setColor({255, 255, 255, 255})
 				if (self.texture.quad == nil) then
 					love.graphics.draw(self.texture.image, self.left, self.top, 0, self.scale_x, self.scale_z)
 				else
 					love.graphics.draw(self.texture.image, self.texture.quad, self.left, self.top, 0, self.scale_x, self.scale_z)
 				end
-			elseif (self.mode == 2) then
-				love.graphics.setColor(unpack(self.color))
-				love.graphics.rectangle("fill", self.left, self.top, self.width, self.height)
-				love.graphics.setColor(255, 255, 255, 255)
 			end
 		end
 	end,
+}
 
-	["__update"] = function(self)
+local methods = {
+	updateSelf = function(self)
 		_setPointHandler(self)
 	end,
 
-	["isVisible"] = function(self)
-		return self.visible
+	isVisible = function(self)
+		return self.is_visible
 	end,
 
-	["setPoint"] = function(self, point, relative_to, relative_point, offset_x, offset_z)
+	setPoint = function(self, point, relative_to, relative_point, offset_x, offset_z)
 		self.point = point
 		self.relative_to = relative_to
 		self.relative_point = relative_point
 		self.offset_x = offset_x
 		self.offset_z = offset_z
 
-		self:__update()
+		self:updateSelf()
 	end,
 
-	["setSize"] = function(self, width, height)
+	setSize = function(self, width, height)
 		self.width = width
 		self.height = height
 
-		self:__update()
+		self:updateSelf()
 	end,
 
-	["setAllPoints"] = function(self, relative_to)
+	setAllPoints = function(self, relative_to)
 		self.point = "ALL"
 		self.relative_to = relative_to
 		self.relative_point = "ALL"
@@ -115,51 +119,61 @@ local methods = {
 		self.width = relative_to.width
 		self.height = relative_to.height
 
-		self:__update()
+		self:updateSelf()
 	end,
 
-	["setTexture"] = function(self, texture)
-		self.mode = 1
+	setTexture = function(self, texture)
+		self.mode = "t"
 		self.texture = texture
 
 		self.scale_x = self.width / texture.width
 		self.scale_z = self.height / texture.height
 	end,
 
-	["setColorTexture"] = function(self, color)
-		self.mode = 2
+	setColorTexture = function(self, color)
+		self.mode = "c"
 		self.color = color
 
 		self.scale_x = 1
 		self.scale_z = 1
 	end,
 
-	["show"] = function(self)
-		self.visible = true
-
-		self:__update()
+	show = function(self)
+		self.is_visible = true
 	end,
 
-	["hide"] = function(self)
-		self.visible = false
-
-		self:__update()
+	hide = function(self)
+		self.is_visible = false
 	end,
 }
 
 local texture = {}
 
-texture.CreateTexture = function(parent)
+function texture.CreateTexture(parent)
 	local inst = {}
 
 	inst.parent = parent
 	inst.type = "texture"
 
+	inst.left = -1
+	inst.right = -1
+	inst.top = -1
+	inst.bottom = -1
+
+	inst.width = -1
+	inst.height = -1
+
+	inst.is_visible = true
+
 	inst.point = "NONE"
 	inst.relative_to = parent
 	inst.relative_point = "NONE"
+	inst.offset_x = 0
+	inst.offset_z = 0
 
-	inst.visible = true
+	for method, func in pairs(cmethods) do
+		inst[method] = func
+	end
 
 	for method, func in pairs(methods) do
 		inst[method] = func
