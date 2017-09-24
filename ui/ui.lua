@@ -4,8 +4,14 @@ UIParent = ui
 setmetatable(ui, {__index = _G})
 setfenv(1, ui)
 
+__VERSION = 0.00
+
 __children__ = {}
 __frames__ = {}
+
+path = ...
+path_req = path:sub(1, -4)
+path_load = path:sub(1, -4):gsub("%p", "/")
 
 type = "UIParent"
 name = "UIParent"
@@ -73,12 +79,14 @@ function isVisible(self)
 	return true
 end
 
+
+
 UIParent.fonts = {}
 UIParent.fonts["default"] = love.graphics.getFont()
-UIParent.fonts["fira_code"] = love.graphics.newFont("ui/assets/FiraCode.ttf", 14)
+UIParent.fonts["fira_code"] = love.graphics.newFont(path_load .. "/assets/FiraCode.ttf", 14)
 
 do
-	require("ui.widgets.frame")
+	require(path_req.. ".widgets.frame")
 end
 -- UIParent.container = {}
 -- UIParent.container.textures = {}

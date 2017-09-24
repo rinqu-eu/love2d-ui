@@ -1,5 +1,5 @@
-local _texture = require("ui.widgets.texture")
-local _font_string = require("ui.widgets.font_string")
+local _texture = require(ui.path_req .. ".widgets.texture")
+local _font_string = require(ui.path_req .. ".widgets.font_string")
 
 function _setPointHandler(self)
 	local relative_to = self.relative_to
