@@ -132,6 +132,9 @@ local methods = {
 		for _, texture in pairs(self.__textures__) do
 			texture:updateSelf()
 		end
+		for _, child in pairs(self.__children__) do
+			child:updateSelf()
+		end
 	end,
 
 	setPoint = function(self, point, relative_to, relative_point, offset_x, offset_z)
