@@ -69,7 +69,7 @@ local cmethods = {
 	end,
 
 	__draw__ = function(self)
-		if (self.is_visible == true) then
+		if (self.is_visible == true and self.parent.is_visible == true) then
 			for _, texture in pairs(self.__textures__) do
 				texture:__draw__()
 			end

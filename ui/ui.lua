@@ -26,6 +26,7 @@ height = bottom
 
 level = 0
 strata = 0
+is_visible = true
 
 function update(self, dt)
 	for _, frame in pairs(self.__frames__) do
@@ -75,18 +76,17 @@ function wheelmoved(self, x, y)
 	end
 end
 
+
 function isVisible(self)
-	return true
+	return self.is_visible
 end
-
-
 
 UIParent.fonts = {}
 UIParent.fonts["default"] = love.graphics.getFont()
 UIParent.fonts["fira_code"] = love.graphics.newFont(path_load .. "/assets/FiraCode.ttf", 14)
 
 do
-	require(path_req.. ".widgets.frame")
+	require(path_req .. ".widgets.frame")
 end
 -- UIParent.container = {}
 -- UIParent.container.textures = {}
