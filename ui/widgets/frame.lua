@@ -132,6 +132,9 @@ local methods = {
 		for _, texture in pairs(self.__textures__) do
 			texture:updateSelf()
 		end
+		for _, font_str in pairs(self.__font_str__) do
+			font_str:updateSelf()
+		end
 		for _, child in pairs(self.__children__) do
 			child:updateSelf()
 		end
