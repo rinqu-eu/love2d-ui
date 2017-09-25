@@ -87,6 +87,7 @@ UIParent.fonts["fira_code"] = love.graphics.newFont(path_load .. "/assets/FiraCo
 
 do
 	require(path_req .. ".widgets.frame")
+	require(path_req .. ".widgets.dropdown")
 end
 -- UIParent.container = {}
 -- UIParent.container.textures = {}
