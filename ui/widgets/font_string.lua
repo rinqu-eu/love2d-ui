@@ -141,6 +141,10 @@ local methods = {
 		self:updateSelf()
 	end,
 
+	getText = function(self)
+		return self.text or ""
+	end,
+
 	show = function(self)
 		self.visible = true
 	end,
