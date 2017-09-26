@@ -17,7 +17,7 @@ local methods = {
 		inst.type = "dropdown_element"
 		inst.index = index
 		inst:setSize(self.settings.el_width, self.settings.el_height)
-		inst:setPoint("TOP", self.dropdown, "TOP", 0, self.settings.el_height * (inst.index - 1))
+		inst:setPoint("TOPLEFT", self.dropdown, "TOPLEFT", 0, self.settings.el_height * (inst.index - 1))
 
 		inst.bg = inst:createTexture()
 		inst.bg:setAllPoints(inst)
