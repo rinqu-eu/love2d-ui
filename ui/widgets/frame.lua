@@ -197,13 +197,17 @@ local methods = {
 	end,
 
 	hide = function(self)
-		self.is_visible = false
-		self:runScript("OnHide")
+		if (self.is_visible == true) then
+			self.is_visible = false
+			self:runScript("OnHide")
+		end
 	end,
 
 	show = function(self)
-		self.is_visible = true
-		self:runScript("OnShow")
+		if (self.is_visible == false) then
+			self.is_visible = true
+			self:runScript("OnShow")
+		end
 	end,
 
 	setScript = function(self, handler, func)
