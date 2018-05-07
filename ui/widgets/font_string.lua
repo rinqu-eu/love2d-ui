@@ -78,10 +78,10 @@ local cmethods = {
 				local hex = "#" .. self.text:sub(5, 10)
 				local text = self.text:sub(11)
 
-				love.graphics.setColor(ToRGB(hex))
+				love.graphics.setColor(unpack(HexToRGB(hex)))
 				love.graphics.print(text, self.left, self.top, 0, self.scale_x, self.scale_z)
 			else
-				love.graphics.setColor(255, 255, 255, 255)
+				love.graphics.setColor(1.0, 1.0, 1.0, 1.0)
 				love.graphics.print(self.text, self.left, self.top, 0, self.scale_x, self.scale_z)
 
 			end
