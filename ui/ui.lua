@@ -24,8 +24,8 @@ bottom = love.graphics.getHeight()
 width = right
 height = bottom
 
-level = 0
-strata = 0
+level = 255
+strata = 5
 is_visible = true
 
 function update(self, dt)
@@ -76,7 +76,6 @@ function wheelmoved(self, x, y)
 	end
 end
 
-
 function isVisible(self)
 	return self.is_visible
 end
@@ -89,9 +88,3 @@ do
 	require(path_req .. ".widgets.frame")
 	require(path_req .. ".widgets.dropdown")
 end
--- UIParent.container = {}
--- UIParent.container.textures = {}
-
--- UIParent.container.textures["exit_off"] = {image = love.graphics.newImage("assets/common/ui/exit_off.png"), width = 32, height = 32}
--- UIParent.container.textures["exit_on"] = {image = love.graphics.newImage("assets/common/ui/exit_on.png"), width = 32, height = 32}
-
