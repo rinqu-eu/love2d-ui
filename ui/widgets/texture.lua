@@ -69,10 +69,10 @@ local cmethods = {
 	__draw__ = function(self)
 		if (self.is_visible == true) then
 			if (self.mode == "c") then
-				lg.setColor(self.color)
+				lg.setColor(unpack(self.color))
 				lg.rectangle("fill", self.left, self.top, self.width, self.height)
 			elseif (self.mode == "t") then
-				lg.setColor({255, 255, 255, 255})
+				lg.setColor(1.0, 1.0, 1.0, 1.0)
 				if (self.texture.quad == nil) then
 					love.graphics.draw(self.texture.image, self.left, self.top, 0, self.scale_x, self.scale_z)
 				else
