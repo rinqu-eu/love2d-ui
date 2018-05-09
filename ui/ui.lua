@@ -11,7 +11,7 @@ __frames__ = {}
 
 path = ...
 path_req = path:sub(1, -4)
-path_load = path:sub(1, -4):gsub("%p", "/")
+path_load = path:sub(1, -4):gsub("%.", "/")
 
 type = "UIParent"
 name = "UIParent"
