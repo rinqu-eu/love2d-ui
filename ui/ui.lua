@@ -56,16 +56,16 @@ function draw(self)
 		table.insert(to_draw[frame.strata], {frame, frame.level})
 	end
 	__SortDrawables(to_draw[1])
-	-- __SortDrawables(to_draw[2])
-	-- __SortDrawables(to_draw[3])
-	-- __SortDrawables(to_draw[4])
-	-- __SortDrawables(to_draw[5])
+	__SortDrawables(to_draw[2])
+	__SortDrawables(to_draw[3])
+	__SortDrawables(to_draw[4])
+	__SortDrawables(to_draw[5])
 
-	-- for _, strata in ipairs(to_draw) do
+	for _, strata in ipairs(to_draw) do
 		for _, frame in ipairs(to_draw[1]) do
 			frame[1]:__draw__()
 		end
-	-- end
+	end
 end
 
 function keypressed(self, key)
