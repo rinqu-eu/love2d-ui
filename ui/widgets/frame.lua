@@ -63,6 +63,18 @@ function _setPointHandler(self)
 	end
 end
 
+local function __SortDrawables(table)
+	local l, m = 1, #table
+
+	for i = 1, m - 1 do
+		for j = i, m do
+			if (table[j][2] < table[i][2]) then
+				table[i], table[j] = table[j], table[i]
+			end
+		end
+	end
+end
+
 local cmethods = {
 	__update__ = function(self, dt)
 		self:runScript("OnUpdate", dt)
@@ -70,12 +82,21 @@ local cmethods = {
 
 	__draw__ = function(self)
 		if (self.is_visible == true and self.parent.is_visible == true) then
+			local to_draw = {}
+
 			for _, texture in pairs(self.__textures__) do
-				texture:__draw__()
+				table.insert(to_draw, {texture, texture.level})
 			end
 			for _, font_string in pairs(self.__font_str__) do
-				font_string:__draw__()
+				table.insert(to_draw, {font_string, font_string.level})
 			end
+
+			__SortDrawables(to_draw)
+
+			for _, drawable in ipairs(to_draw) do
+				drawable[1]:__draw__()
+			end
+
 		end
 	end,
 

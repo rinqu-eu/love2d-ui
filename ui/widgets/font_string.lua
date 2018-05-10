@@ -141,6 +141,11 @@ local methods = {
 		self:updateSelf()
 	end,
 
+
+	setLevel = function(self, level)
+		self.level = level
+	end,
+
 	getText = function(self)
 		return self.text or ""
 	end,
@@ -176,6 +181,7 @@ function font_string.CreateFontString(parent)
 	inst.text = ""
 
 	inst.visible = true
+	inst.level = 1
 
 	for method, func in pairs(cmethods) do
 		inst[method] = func

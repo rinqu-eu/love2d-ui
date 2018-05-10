@@ -122,6 +122,10 @@ local methods = {
 		self:updateSelf()
 	end,
 
+	setLevel = function(self, level)
+		self.level = level
+	end,
+
 	setTexture = function(self, texture)
 		self.mode = "t"
 		self.texture = texture
@@ -170,6 +174,8 @@ function texture.CreateTexture(parent)
 	inst.relative_point = "NONE"
 	inst.offset_x = 0
 	inst.offset_z = 0
+
+	inst.level = 1
 
 	for method, func in pairs(cmethods) do
 		inst[method] = func
