@@ -248,6 +248,14 @@ local methods = {
 			end
 		end
 	end,
+
+	setLevel = function(self, level)
+		self.level = level
+	end,
+
+	setStrata = function(self, strata)
+		self.strata = strata
+	end
 }
 
 function CreateFrame(parent, name)
@@ -267,8 +275,8 @@ function CreateFrame(parent, name)
 	inst.width = -1
 	inst.height = -1
 
-	inst.level = -1
-	inst.strata = -1
+	inst.level = 1
+	inst.strata = 1
 
 	inst.is_visible = true
 	inst.is_mouse_over = false

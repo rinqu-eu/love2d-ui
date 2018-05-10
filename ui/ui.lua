@@ -28,6 +28,22 @@ level = 255
 strata = 5
 is_visible = true
 
+local function __SortDrawables(table)
+	local l, m = 1, #table
+
+	if (l == m) then return end
+	if (table[l] == nil) then return end
+	if (table[l][2] == nil) then return end
+
+	for i = 1, m - 1 do
+		for j = i, m do
+			if (table[j][2] < table[i][2]) then
+				table[i], table[j] = table[j], table[i]
+			end
+		end
+	end
+end
+
 function update(self, dt)
 	for _, frame in pairs(self.__frames__) do
 		frame:__update__(dt)
@@ -35,9 +51,21 @@ function update(self, dt)
 end
 
 function draw(self)
+	local to_draw = {{},{},{},{},{}}
 	for _, frame in pairs(self.__frames__) do
-		frame:__draw__()
+		table.insert(to_draw[frame.strata], {frame, frame.level})
 	end
+	__SortDrawables(to_draw[1])
+	-- __SortDrawables(to_draw[2])
+	-- __SortDrawables(to_draw[3])
+	-- __SortDrawables(to_draw[4])
+	-- __SortDrawables(to_draw[5])
+
+	-- for _, strata in ipairs(to_draw) do
+		for _, frame in ipairs(to_draw[1]) do
+			frame[1]:__draw__()
+		end
+	-- end
 end
 
 function keypressed(self, key)
