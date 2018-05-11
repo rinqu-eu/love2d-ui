@@ -89,8 +89,8 @@ local cmethods = {
 			for _, texture in pairs(self.__textures__) do
 				table.insert(to_draw, {texture, texture.level})
 			end
-			for _, font_string in pairs(self.__font_str__) do
-				table.insert(to_draw, {font_string, font_string.level})
+			for _, string in pairs(self.__strings__) do
+				table.insert(to_draw, {string, string.level})
 			end
 
 			_SortDrawables(to_draw)
@@ -152,8 +152,8 @@ local methods = {
 			texture:updateSelf()
 		end
 
-		for _, font_str in pairs(self.__font_str__) do
-			font_str:updateSelf()
+		for _, string in pairs(self.__strings__) do
+			string:updateSelf()
 		end
 
 		for _, child in pairs(self.__children__) do
@@ -198,9 +198,9 @@ local methods = {
 	end,
 
 	createString = function(self)
-		local inst = _font_string.CreateString(self)
+		local inst = _string.CreateString(self)
 
-		table.insert(self.__font_str__, inst)
+		table.insert(self.__strings__, inst)
 
 		return inst
 	end,
@@ -289,7 +289,7 @@ function CreateFrame(parent, name)
 
 	inst.__children__ = {}
 	inst.__textures__ = {}
-	inst.__font_str__ = {}
+	inst.__strings__ = {}
 	inst.__scripts__ = {}
 
 	for method, func in pairs(cmethods) do
