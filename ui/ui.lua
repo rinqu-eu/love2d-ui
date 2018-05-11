@@ -28,7 +28,7 @@ level = 255
 strata = 5
 is_visible = true
 
-local function __SortDrawables(table)
+local function _SortDrawables(table)
 	local l, m = 1, #table
 
 	if (l == m) then return end
@@ -55,11 +55,11 @@ function draw(self)
 	for _, frame in pairs(self.__frames__) do
 		table.insert(to_draw[frame.strata], {frame, frame.level})
 	end
-	__SortDrawables(to_draw[1])
-	__SortDrawables(to_draw[2])
-	__SortDrawables(to_draw[3])
-	__SortDrawables(to_draw[4])
-	__SortDrawables(to_draw[5])
+	_SortDrawables(to_draw[1])
+	_SortDrawables(to_draw[2])
+	_SortDrawables(to_draw[3])
+	_SortDrawables(to_draw[4])
+	_SortDrawables(to_draw[5])
 
 	for _, strata in ipairs(to_draw) do
 		for _, frame in ipairs(to_draw[1]) do
@@ -113,7 +113,7 @@ UIParent.fonts["default"] = love.graphics.getFont()
 UIParent.fonts["fira_code"] = love.graphics.newFont(path_load .. "/assets/FiraCode.ttf", 14)
 
 do
-	require(path_req .. ".utils")
+	require(path_req .. ".utils_color")
 	require(path_req .. ".widgets.frame")
 	require(path_req .. ".widgets.dropdown")
 end

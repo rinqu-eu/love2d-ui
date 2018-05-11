@@ -1,6 +1,6 @@
 local lg = love.graphics
 
-local _setPointHandler = function(self)
+local function _SetPointHandler(self)
 	local relative_to = self.relative_to
 	local point = self.point
 
@@ -85,7 +85,7 @@ local cmethods = {
 
 local methods = {
 	updateSelf = function(self)
-		_setPointHandler(self)
+		_SetPointHandler(self)
 	end,
 
 	isVisible = function(self)

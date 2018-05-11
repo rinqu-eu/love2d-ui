@@ -1,7 +1,7 @@
 local _texture = require(ui.path_req .. ".widgets.texture")
-local _font_string = require(ui.path_req .. ".widgets.font_string")
+local _string = require(ui.path_req .. ".widgets.string")
 
-function _setPointHandler(self)
+local function _SetPointHandler(self)
 	local relative_to = self.relative_to
 	local point = self.point
 
@@ -63,7 +63,7 @@ function _setPointHandler(self)
 	end
 end
 
-local function __SortDrawables(table)
+local function _SortDrawables(table)
 	local l, m = 1, #table
 
 	for i = 1, m - 1 do
@@ -93,7 +93,7 @@ local cmethods = {
 				table.insert(to_draw, {font_string, font_string.level})
 			end
 
-			__SortDrawables(to_draw)
+			_SortDrawables(to_draw)
 
 			for _, drawable in ipairs(to_draw) do
 				drawable[1]:__draw__()
@@ -144,30 +144,18 @@ local cmethods = {
 	end,
 }
 
---[[
-scripts
-	OnUpdate
-	OnEnter
-	OnLeave
-	OnShow
-	OnHide
-	OnMouseDown w/mouse
-	OnMouseUp w/mouse
-	OnMouseWheel w/ mouse
-	OnKeyDown
-	OnKeyUp
-]]
-
 local methods = {
 	updateSelf = function(self)
-		_setPointHandler(self)
+		_SetPointHandler(self)
 
 		for _, texture in pairs(self.__textures__) do
 			texture:updateSelf()
 		end
+
 		for _, font_str in pairs(self.__font_str__) do
 			font_str:updateSelf()
 		end
+
 		for _, child in pairs(self.__children__) do
 			child:updateSelf()
 		end

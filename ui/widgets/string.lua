@@ -3,11 +3,11 @@ local DEFAULT_FONT_FILE = UIParent.fonts["default"]
 
 local PADDING = 2
 
-local _getTextWidth = function(font_file, font_size, text)
+local function _GetTextWidth(font_file, font_size, text)
 	return math.ceil(font_file:getWidth(text) * font_size / DEFAULT_FONT_SIZE)
 end
 
-local _setPointHandler = function(self)
+local function _SetPointHandler(self)
 	local relative_to = self.relative_to
 	local point = self.point
 
@@ -93,7 +93,7 @@ local cmethods = {
 
 local methods = {
 	updateSelf = function(self)
-		_setPointHandler(self)
+		_SetPointHandler(self)
 	end,
 
 	setAllPoints = function(self, relative_to)
@@ -118,7 +118,7 @@ local methods = {
 		self.font_size = font_size
 		self.scale_x = font_size / DEFAULT_FONT_SIZE
 		self.scale_z = font_size / DEFAULT_FONT_SIZE
-		self.width = _getTextWidth(self.font_file, self.font_size, self.text)
+		self.width = _GetTextWidth(self.font_file, self.font_size, self.text)
 		self.height = font_size
 
 		self:updateSelf()
@@ -136,7 +136,7 @@ local methods = {
 
 	setText = function(self, text)
 		self.text = tostring(text)
-		self.width = _getTextWidth(self.font_file, self.font_size, text)
+		self.width = _GetTextWidth(self.font_file, self.font_size, text)
 
 		self:updateSelf()
 	end,
@@ -159,13 +159,13 @@ local methods = {
 	end,
 }
 
-local font_string = {}
+local string = {}
 
-function font_string.CreateFontString(parent)
+function string.CreateFontString(parent)
 	local inst = {}
 
 	inst.parent = parent
-	inst.type = "font_string"
+	inst.type = "string"
 
 	inst.point = "NONE"
 	inst.relative_to = parent
@@ -194,4 +194,4 @@ function font_string.CreateFontString(parent)
 	return inst
 end
 
-return font_string
+return string
