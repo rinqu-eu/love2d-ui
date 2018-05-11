@@ -28,17 +28,17 @@ level = 255
 layer = 5
 is_visible = true
 
-local function _SortDrawables(table)
-	local l, m = 1, #table
+local function _SortDrawables(frames)
+	for _, layer in ipairs(frames) do
+		if (#layer < 2) then break end
 
-	if (l == m) then return end
-	if (table[l] == nil) then return end
-	if (table[l][2] == nil) then return end
+		local l, m = 1, #layer
 
-	for i = 1, m - 1 do
-		for j = i, m do
-			if (table[j][2] < table[i][2]) then
-				table[i], table[j] = table[j], table[i]
+		for i = 1, m - 1 do
+			for j = i, m do
+				if (layer[j][2] < layer[i][2]) then
+					layer[i], layer[j] = layer[j], layer[i]
+				end
 			end
 		end
 	end
@@ -52,17 +52,15 @@ end
 
 function draw(self)
 	local to_draw = {{},{},{},{},{}}
+
 	for _, frame in pairs(self.__frames__) do
 		table.insert(to_draw[frame.layer], {frame, frame.level})
 	end
-	_SortDrawables(to_draw[1])
-	_SortDrawables(to_draw[2])
-	_SortDrawables(to_draw[3])
-	_SortDrawables(to_draw[4])
-	_SortDrawables(to_draw[5])
+
+	_SortDrawables(to_draw)
 
 	for _, layer in ipairs(to_draw) do
-		for _, frame in ipairs(to_draw[1]) do
+		for _, frame in ipairs(layer) do
 			frame[1]:__draw__()
 		end
 	end
