@@ -25,7 +25,7 @@ width = right
 height = bottom
 
 level = 255
-strata = 5
+layer = 5
 is_visible = true
 
 local function _SortDrawables(table)
@@ -53,7 +53,7 @@ end
 function draw(self)
 	local to_draw = {{},{},{},{},{}}
 	for _, frame in pairs(self.__frames__) do
-		table.insert(to_draw[frame.strata], {frame, frame.level})
+		table.insert(to_draw[frame.layer], {frame, frame.level})
 	end
 	_SortDrawables(to_draw[1])
 	_SortDrawables(to_draw[2])
@@ -61,7 +61,7 @@ function draw(self)
 	_SortDrawables(to_draw[4])
 	_SortDrawables(to_draw[5])
 
-	for _, strata in ipairs(to_draw) do
+	for _, layer in ipairs(to_draw) do
 		for _, frame in ipairs(to_draw[1]) do
 			frame[1]:__draw__()
 		end
