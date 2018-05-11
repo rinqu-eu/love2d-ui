@@ -250,11 +250,11 @@ local methods = {
 	end,
 
 	setLevel = function(self, level)
-		self.level = level
+		self.level = Clamp(level, 1, 255)
 	end,
 
 	setLayer = function(self, layer)
-		self.layer = layer
+		self.layer = Clamp(layer, 1, 5)
 	end
 }
 
