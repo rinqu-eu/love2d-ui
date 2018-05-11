@@ -197,8 +197,8 @@ local methods = {
 		return inst
 	end,
 
-	createFontString = function(self)
-		local inst = _font_string.CreateFontString(self)
+	createString = function(self)
+		local inst = _font_string.CreateString(self)
 
 		table.insert(self.__font_str__, inst)
 

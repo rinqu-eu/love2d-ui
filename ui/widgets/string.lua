@@ -161,7 +161,7 @@ local methods = {
 
 local string = {}
 
-function string.CreateFontString(parent)
+function string.CreateString(parent)
 	local inst = {}
 
 	inst.parent = parent
