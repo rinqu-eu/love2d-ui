@@ -77,7 +77,9 @@ end
 
 local cmethods = {
 	__update__ = function(self, dt)
-		self:runScript("OnUpdate", dt)
+		if (self:isVisible() ==  true) then
+			self:runScript("OnUpdate", dt)
+		end
 	end,
 
 	__draw__ = function(self)
@@ -101,19 +103,27 @@ local cmethods = {
 	end,
 
 	__keypressed__ = function(self, key)
-		self:runScript("OnKeyDown", key)
+		if (self:isVisible() ==  true) then
+			self:runScript("OnKeyDown", key)
+		end
 	end,
 
 	__keyreleased__ = function(self, key)
-		self:runScript("OnKeyUp", key)
+		if (self:isVisible() ==  true) then
+			self:runScript("OnKeyUp", key)
+		end
 	end,
 
 	__mousepressed__ = function(self, x, y, button)
-		self:runScript("OnMouseDown", x, y, button)
+		if (self:isVisible() == true and self:isMouseOver() == true) then
+			self:runScript("OnMouseDown", x, y, button)
+		end
 	end,
 
 	__mousereleased__ = function(self, x, y, button)
-		self:runScript("OnMouseUp", x, y, button)
+		if (self:isVisible() == true and self:isMouseOver() == true) then
+			self:runScript("OnMouseUp", x, y, button)
+		end
 	end,
 
 	__mousemoved__ = function(self, x, y, dx, dy)
@@ -128,7 +138,9 @@ local cmethods = {
 	end,
 
 	__wheelmoved__ = function(self, x, y)
-		self:runScript("OnMouseWheel", x, y)
+		if (self:isVisible() == true and self:isMouseOver() == true) then
+			self:runScript("OnMouseWheel", x, y)
+		end
 	end,
 }
 
