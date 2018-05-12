@@ -63,13 +63,15 @@ local function _SetPointHandler(self)
 	end
 end
 
-local function _SortDrawables(table)
-	local l, m = 1, #table
+local function _SortDrawables(drawables)
+	if (#drawables < 2) then return end
+
+	local l, m = 1, #drawables
 
 	for i = 1, m - 1 do
 		for j = i, m do
-			if (table[j][2] < table[i][2]) then
-				table[i], table[j] = table[j], table[i]
+			if (drawables[j][2] < drawables[i][2]) then
+				drawables[i], drawables[j] = drawables[j], drawables[i]
 			end
 		end
 	end
@@ -89,6 +91,7 @@ local cmethods = {
 			for _, texture in pairs(self.__textures__) do
 				table.insert(to_draw, {texture, texture.level})
 			end
+
 			for _, string in pairs(self.__strings__) do
 				table.insert(to_draw, {string, string.level})
 			end
