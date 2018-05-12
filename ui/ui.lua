@@ -4,7 +4,7 @@ UIParent = ui
 setmetatable(ui, {__index = _G})
 setfenv(1, ui)
 
-__VERSION = 0.02
+__VERSION = 0.03
 
 __children__ = {}
 __frames__ = {}
